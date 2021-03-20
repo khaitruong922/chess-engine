@@ -9,4 +9,4 @@ class Queen(Piece):
         return self.get_color() + 'Q'
 
     def get_possible_moves(self, r, c, board):
-        raise NotImplementedError("Please specify the possible moves for this piece")
+        return []

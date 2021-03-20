@@ -9,4 +9,4 @@ class King(Piece):
         return self.get_color() + 'K'
 
     def get_possible_moves(self, r, c, board):
-        raise NotImplementedError("Please specify the possible moves for this piece")
+        return []

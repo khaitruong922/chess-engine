@@ -47,7 +47,7 @@ class ChessEngine:
                     continue
                 if (self.is_white_turn and piece.is_white) or (not self.is_white_turn and not piece.is_white):
                     moves.append(piece.get_possible_moves(r, c, self.board))
-        return []
+        return moves
 
     def get_valid_moves(self):
         return self.get_possible_moves()
