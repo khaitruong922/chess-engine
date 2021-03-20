@@ -34,7 +34,7 @@ class Renderer:
         for r in range(resolution.dimension):
             for c in range(resolution.dimension):
                 piece = self.board.data[r][c]
-                if piece == pieces.OO:
+                if piece is None:
                     continue
-                self.screen.blit(sprites[piece], get_rect(c, r))
+                self.screen.blit(sprites[piece.get_name()], get_rect(c, r))
         pass
