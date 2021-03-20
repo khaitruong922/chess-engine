@@ -1,5 +1,5 @@
-from models.Move import Move
 from models.Piece import *
+from models.Move import Move
 
 
 class Rook(Piece):

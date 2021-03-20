@@ -1,4 +1,5 @@
 from models.Piece import *
+from models.Move import Move
 
 
 class Pawn(Piece):
