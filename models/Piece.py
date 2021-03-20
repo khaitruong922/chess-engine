@@ -1,3 +1,7 @@
+def is_in_board(x):
+    return 0 <= x <= 7
+
+
 class Piece:
     def __init__(self, is_white):
         self.is_white = is_white

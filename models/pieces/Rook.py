@@ -1,5 +1,5 @@
 from models.Move import Move
-from models.Piece import Piece
+from models.Piece import *
 
 
 class Rook(Piece):
@@ -10,58 +10,24 @@ class Rook(Piece):
         return self.get_color() + 'R'
 
     def get_possible_moves(self, r, c, board):
+        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
         moves = []
-        # Up
-        for des_r in range(r - 1, -1, -1):
-            piece = board[des_r][c]
-            start = r, c
-            end = des_r, c
-            if piece is None:
-                moves.append(Move(start, end, board))
-                continue
-            if self.has_same_color(piece):
-                break
-            if not self.has_same_color(piece):
-                moves.append(Move(start, end, board))
-                break
-        # Down
-        for des_r in range(r + 1, 8, 1):
-            piece = board[des_r][c]
-            start = r, c
-            end = des_r, c
-            if piece is None:
-                moves.append(Move(start, end, board))
-                continue
-            if self.has_same_color(piece):
-                break
-            if not self.has_same_color(piece):
-                moves.append(Move(start, end, board))
-                break
-        # Right
-        for des_c in range(c + 1, 8, 1):
-            piece = board[r][des_c]
-            start = r, c
-            end = r, des_c
-            if piece is None:
-                moves.append(Move(start, end, board))
-                continue
-            if self.has_same_color(piece):
-                break
-            if not self.has_same_color(piece):
-                moves.append(Move(start, end, board))
-                break
-        # Left
-        for des_c in range(c - 1, -1, -1):
-            piece = board[r][des_c]
-            start = r, c
-            end = r, des_c
-            if piece is None:
-                moves.append(Move(start, end, board))
-                continue
-            if self.has_same_color(piece):
-                break
-            if not self.has_same_color(piece):
-                moves.append(Move(start, end, board))
-                break
+        for d in directions:
+            for i in range(1, 8):
+                des_r = r + d[0] * i
+                des_c = c + d[1] * i
+                if not is_in_board(des_r) or not is_in_board(des_c):
+                    break
+                piece = board[des_r][des_c]
+                start = r, c
+                end = des_r, des_c
+                if piece is None:
+                    moves.append(Move(start, end, board))
+                    continue
+                if self.has_same_color(piece):
+                    break
+                if not self.has_same_color(piece):
+                    moves.append(Move(start, end, board))
+                    break
 
         return moves

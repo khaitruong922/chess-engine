@@ -1,4 +1,4 @@
-from models.Piece import Piece
+from models.Piece import *
 
 
 class Bishop(Piece):
