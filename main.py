@@ -1,7 +1,7 @@
 import pygame as pg
 
 from constants.resolution import sq_size
-from models.Board import Board
+from models.ChessEngine import ChessEngine
 from components.Renderer import Renderer
 from components.Clock import Clock
 from models.Move import Move
@@ -10,8 +10,8 @@ from models.Move import Move
 def main():
     pg.init()
     clock = Clock()
-    board = Board()
-    renderer = Renderer(board)
+    chess_engine = ChessEngine()
+    renderer = Renderer(chess_engine)
     is_playing = True
     selected_square = ()
     player_clicks = []
@@ -31,14 +31,14 @@ def main():
                     selected_square = r, c
                     player_clicks.append(selected_square)
                 if len(player_clicks) == 2:
-                    board.make_move(Move(player_clicks[0], player_clicks[1],board))
+                    chess_engine.make_move(Move(player_clicks[0], player_clicks[1], chess_engine.board))
                     selected_square = ()
                     player_clicks.clear()
                 print(selected_square)
                 continue
             if e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
-                    board.undo_move()
+                    chess_engine.undo_move()
                     continue
                 continue
         clock.tick()

@@ -1,5 +1,5 @@
 import pygame as pg
-from models.Board import Board
+from models.ChessEngine import ChessEngine
 from constants import resolution, colors, pieces
 from constants.sprites import sprites
 from constants.resolution import sq_size
@@ -10,8 +10,8 @@ def get_rect(c, r):
 
 
 class Renderer:
-    def __init__(self, board: Board):
-        self.board = board
+    def __init__(self, chess_engine: ChessEngine):
+        self.chess_engine = chess_engine
         self.screen = pg.display.set_mode((resolution.width, resolution.height))
         self.screen.fill(pg.Color(colors.white))
 
@@ -33,7 +33,7 @@ class Renderer:
     def render_pieces(self):
         for r in range(resolution.dimension):
             for c in range(resolution.dimension):
-                piece = self.board.data[r][c]
+                piece = self.chess_engine.board[r][c]
                 if piece is None:
                     continue
                 self.screen.blit(sprites[piece.get_name()], get_rect(c, r))

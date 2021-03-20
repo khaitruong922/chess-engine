@@ -8,9 +8,9 @@ from models.pieces.Queen import Queen
 from models.pieces.Rook import Rook
 
 
-class Board:
+class ChessEngine:
     def __init__(self):
-        self.data = [
+        self.board = [
             [Rook(False), Knight(False), Bishop(False), Queen(False), King(False), Bishop(False), Knight(False),
              Rook(False)],
             [Pawn(False), Pawn(False), Pawn(False), Pawn(False), Pawn(False), Pawn(False), Pawn(False), Pawn(False)],
@@ -25,8 +25,8 @@ class Board:
         self.is_white_turn = True
 
     def make_move(self, move):
-        self.data[move.start[0]][move.start[1]] = None
-        self.data[move.end[0]][move.end[1]] = move.piece_moved
+        self.board[move.start[0]][move.start[1]] = None
+        self.board[move.end[0]][move.end[1]] = move.piece_moved
         self.moves.append(move)
         self.is_white_turn = not self.is_white_turn
 
@@ -34,17 +34,19 @@ class Board:
         if len(self.moves) == 0:
             return
         move = self.moves.pop()
-        self.data[move.start[0]][move.start[1]] = move.piece_moved
-        self.data[move.end[0]][move.end[1]] = move.piece_captured
+        self.board[move.start[0]][move.start[1]] = move.piece_moved
+        self.board[move.end[0]][move.end[1]] = move.piece_captured
         self.is_white_turn = not self.is_white_turn
 
     def get_possible_moves(self):
+        moves = []
         for r in range(resolution.dimension):
             for c in range(resolution.dimension):
-                piece = self.data[r][c]
-                if piece == OO:
+                piece = self.board[r][c]
+                if piece is None:
                     continue
-                pass
+                if (self.is_white_turn and piece.is_white) or (not self.is_white_turn and not piece.is_white):
+                    moves.append(piece.get_possible_moves(r, c, self.board))
         return []
 
     def get_valid_moves(self):
