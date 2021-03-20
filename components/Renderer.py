@@ -24,15 +24,15 @@ class Renderer:
         def get_square_color(square_number: int):
             return colors.light_green if square_number % 2 == 0 else colors.green
 
-        for r in range(resolution.dimension):
-            for c in range(resolution.dimension):
+        for r in range(8):
+            for c in range(8):
                 color = get_square_color(r + c)
                 pg.draw.rect(self.screen, color, get_rect(c, r))
         pass
 
     def render_pieces(self):
-        for r in range(resolution.dimension):
-            for c in range(resolution.dimension):
+        for r in range(8):
+            for c in range(8):
                 piece = self.chess_engine.board[r][c]
                 if piece is None:
                     continue

@@ -1,5 +1,4 @@
 from constants.pieces import *
-from constants import resolution
 from models.pieces.Bishop import Bishop
 from models.pieces.King import King
 from models.pieces.Knight import Knight
@@ -18,7 +17,7 @@ class ChessEngine:
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
             [None, None, None, None, None, None, None, None],
-            [Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True)],
+            [Rook(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True), Pawn(True)],
             [Rook(True), Knight(True), Bishop(True), Queen(True), King(True), Bishop(True), Knight(True), Rook(True)],
         ]
         self.moves = []
@@ -40,13 +39,13 @@ class ChessEngine:
 
     def get_possible_moves(self):
         moves = []
-        for r in range(resolution.dimension):
-            for c in range(resolution.dimension):
+        for r in range(8):
+            for c in range(8):
                 piece = self.board[r][c]
                 if piece is None:
                     continue
                 if (self.is_white_turn and piece.is_white) or (not self.is_white_turn and not piece.is_white):
-                    moves.append(piece.get_possible_moves(r, c, self.board))
+                    moves.extend(piece.get_possible_moves(r, c, self.board))
         return moves
 
     def get_valid_moves(self):

@@ -9,4 +9,5 @@ class King(Piece):
         return self.get_color() + 'K'
 
     def get_possible_moves(self, r, c, board):
-        return []
+        moves = []
+        return moves

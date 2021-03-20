@@ -9,4 +9,5 @@ class Bishop(Piece):
         return self.get_color() + 'B'
 
     def get_possible_moves(self, r, c, board):
-        return []
+        moves = []
+        return moves

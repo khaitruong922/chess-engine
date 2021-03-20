@@ -10,3 +10,8 @@ class Piece:
 
     def get_possible_moves(self, r, c, board):
         raise NotImplementedError("Please specify the possible moves for this piece")
+
+    def has_same_color(self, piece):
+        if not isinstance(piece, Piece):
+            return False
+        return self.is_white == piece.is_white

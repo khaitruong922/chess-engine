@@ -13,8 +13,10 @@ def main():
     chess_engine = ChessEngine()
     renderer = Renderer(chess_engine)
     is_playing = True
+    move_made = False
     selected_square = ()
     player_clicks = []
+    valid_moves = chess_engine.get_valid_moves()
     while is_playing:
         for e in pg.event.get():
             if e.type == pg.QUIT:
@@ -30,17 +32,25 @@ def main():
                 else:
                     selected_square = r, c
                     player_clicks.append(selected_square)
+                print(selected_square)
                 if len(player_clicks) == 2:
-                    chess_engine.make_move(Move(player_clicks[0], player_clicks[1], chess_engine.board))
+                    move = Move(player_clicks[0], player_clicks[1], chess_engine.board)
+                    print(valid_moves)
+                    if move in valid_moves:
+                        chess_engine.make_move(move)
+                        move_made = True
                     selected_square = ()
                     player_clicks.clear()
-                print(selected_square)
                 continue
             if e.type == pg.KEYDOWN:
                 if e.key == pg.K_z:
                     chess_engine.undo_move()
+                    move_made = True
                     continue
                 continue
+        if move_made:
+            valid_moves = chess_engine.get_valid_moves()
+            move_made = False
         clock.tick()
         renderer.render()
 
