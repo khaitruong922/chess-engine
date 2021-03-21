@@ -6,7 +6,7 @@ class BoardState():
     def __init__(self, chess_engine: ChessEngine):
         self.chess_engine = chess_engine
         self.move_made = False
-        self.selected_square = ()
+        self.selected_square = None
         self.clicks = []
         self.valid_moves = self.chess_engine.get_valid_moves()
 
@@ -24,7 +24,7 @@ class BoardState():
             self.reset_click_state()
 
     def reset_click_state(self):
-        self.selected_square = ()
+        self.selected_square = None
         self.clicks = []
 
     def undo(self):
@@ -33,7 +33,7 @@ class BoardState():
 
     def get_selected_piece_valid_moves(self):
         moves = []
-        if self.selected_square == ():
+        if self.selected_square is None:
             return moves
         return [move for move in self.valid_moves if move.start == self.selected_square]
 

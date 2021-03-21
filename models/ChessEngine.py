@@ -26,7 +26,7 @@ class ChessEngine:
         self.board[move.start[0]][move.start[1]] = None
         self.board[move.end[0]][move.end[1]] = move.piece_moved
         self.moves.append(move)
-        self.is_white_turn = not self.is_white_turn
+        self.switch_turn()
 
     def undo_move(self):
         if len(self.moves) == 0:
@@ -34,13 +34,22 @@ class ChessEngine:
         move = self.moves.pop()
         self.board[move.start[0]][move.start[1]] = move.piece_moved
         self.board[move.end[0]][move.end[1]] = move.piece_captured
-        self.is_white_turn = not self.is_white_turn
+        self.switch_turn()
 
     def is_checking(self):
         for move in self.get_possible_moves():
             if isinstance(move.piece_captured, King):
                 return True
         return False
+
+    def get_checked_square(self):
+        square = None
+        self.switch_turn()
+        for move in self.get_possible_moves():
+            if isinstance(move.piece_captured, King):
+                square = move.end[0], move.end[1]
+        self.switch_turn()
+        return square
 
     def get_possible_moves(self):
         moves = []
@@ -62,3 +71,6 @@ class ChessEngine:
                 valid_moves.append(move)
             self.undo_move()
         return valid_moves
+
+    def switch_turn(self):
+        self.is_white_turn = not self.is_white_turn

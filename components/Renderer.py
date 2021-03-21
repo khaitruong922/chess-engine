@@ -33,6 +33,7 @@ class Renderer:
     def render(self):
         self.render_board()
         self.render_selected_square()
+        self.render_checked_square()
         self.render_pieces()
         self.render_selected_piece_valid_moves()
         pg.display.flip()
@@ -57,9 +58,10 @@ class Renderer:
         pass
 
     def render_selected_square(self):
-        if self.board_state.selected_square == ():
+        square = self.board_state.selected_square
+        if square is None:
             return
-        r, c = self.board_state.selected_square
+        r, c = square
         s = get_square_surface(colors.yellow, 100)
         self.screen.blit(s, (c * sq_size, r * sq_size))
 
@@ -70,3 +72,12 @@ class Renderer:
             pg.draw.circle(s, colors.semi_trans_black, ((c + 0.5) * sq_size, (r + 0.5) * sq_size),
                            resolution.valid_move_indicator_radius)
         self.screen.blit(s, (0, 0))
+
+    def render_checked_square(self):
+        square = self.chess_engine.get_checked_square()
+        print(square)
+        if square is None:
+            return
+        r, c = square
+        s = get_square_surface(colors.red, 100)
+        self.screen.blit(s, (c * sq_size, r * sq_size))
