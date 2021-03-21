@@ -28,6 +28,8 @@ class ChessEngine:
     def make_move(self, move):
         self.board[move.start[0]][move.start[1]] = None
         self.board[move.end[0]][move.end[1]] = move.piece_moved
+        if move.is_pawn_promotion:
+            self.board[move.end[0]][move.end[1]] = Queen(move.piece_moved.is_white)
         self.moves.append(move)
         self.switch_turn()
 
