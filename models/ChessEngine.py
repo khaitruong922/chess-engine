@@ -36,6 +36,12 @@ class ChessEngine:
         self.board[move.end[0]][move.end[1]] = move.piece_captured
         self.is_white_turn = not self.is_white_turn
 
+    def is_checking(self):
+        for move in self.get_possible_moves():
+            if isinstance(move.piece_captured, King):
+                return True
+        return False
+
     def get_possible_moves(self):
         moves = []
         for r in range(8):
@@ -48,4 +54,11 @@ class ChessEngine:
         return moves
 
     def get_valid_moves(self):
-        return self.get_possible_moves()
+        possible_moves = self.get_possible_moves()
+        valid_moves = []
+        for move in possible_moves:
+            self.make_move(move)
+            if not self.is_checking():
+                valid_moves.append(move)
+            self.undo_move()
+        return valid_moves
