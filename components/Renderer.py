@@ -75,7 +75,6 @@ class Renderer:
 
     def render_checked_square(self):
         square = self.chess_engine.get_checked_square()
-        print(square)
         if square is None:
             return
         r, c = square

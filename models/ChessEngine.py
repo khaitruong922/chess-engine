@@ -42,6 +42,20 @@ class ChessEngine:
                 return True
         return False
 
+    def is_checked(self):
+        self.switch_turn()
+        for move in self.get_possible_moves():
+            if isinstance(move.piece_captured, King):
+                return True
+        self.switch_turn()
+        return False
+
+    def is_stalemated(self):
+        return True if len(self.get_possible_moves()) == 0 else False
+
+    def is_checkmated(self):
+        return self.is_checked() and self.is_stalemated()
+
     def get_checked_square(self):
         square = None
         self.switch_turn()
@@ -67,6 +81,7 @@ class ChessEngine:
         valid_moves = []
         for move in possible_moves:
             self.make_move(move)
+            # Now it's opponent turn
             if not self.is_checking():
                 valid_moves.append(move)
             self.undo_move()
