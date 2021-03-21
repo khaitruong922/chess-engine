@@ -11,6 +11,18 @@ def get_rect(c, r):
     return pg.Rect(c * sq_size, r * sq_size, sq_size, sq_size)
 
 
+def get_square_surface(color, alpha):
+    s = pg.Surface((sq_size, sq_size))
+    s.set_alpha(alpha)
+    s.fill(color)
+    return s
+
+
+def get_alpha_surface():
+    s = pg.Surface((resolution.width, resolution.height), pg.SRCALPHA)
+    return s
+
+
 class Renderer:
     def __init__(self, chess_engine: ChessEngine, board_state: BoardState):
         self.chess_engine = chess_engine
@@ -22,6 +34,7 @@ class Renderer:
         self.render_board()
         self.render_selected_square()
         self.render_pieces()
+        self.render_selected_piece_valid_moves()
         pg.display.flip()
 
     def render_board(self):
@@ -47,7 +60,13 @@ class Renderer:
         if self.board_state.selected_square == ():
             return
         r, c = self.board_state.selected_square
-        s = pg.Surface((sq_size, sq_size))
-        s.set_alpha(100)
-        s.fill(colors.blue)
+        s = get_square_surface(colors.yellow, 100)
         self.screen.blit(s, (c * sq_size, r * sq_size))
+
+    def render_selected_piece_valid_moves(self):
+        s = get_alpha_surface()
+        for move in self.board_state.get_selected_piece_valid_moves():
+            r, c = move.end
+            pg.draw.circle(s, colors.semi_trans_black, ((c + 0.5) * sq_size, (r + 0.5) * sq_size),
+                           resolution.valid_move_indicator_radius)
+        self.screen.blit(s, (0, 0))

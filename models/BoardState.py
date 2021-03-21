@@ -31,6 +31,12 @@ class BoardState():
         self.chess_engine.undo_move()
         self.move_made = True
 
+    def get_selected_piece_valid_moves(self):
+        moves = []
+        if self.selected_square == ():
+            return moves
+        return [move for move in self.valid_moves if move.start == self.selected_square]
+
     def handle_move_made(self):
         if not self.move_made:
             return
