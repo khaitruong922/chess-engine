@@ -35,7 +35,6 @@ def main():
                 print(selected_square)
                 if len(player_clicks) == 2:
                     move = Move(player_clicks[0], player_clicks[1], chess_engine.board)
-                    print(valid_moves)
                     if move in valid_moves:
                         chess_engine.make_move(move)
                         move_made = True
