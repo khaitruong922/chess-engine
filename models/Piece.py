@@ -4,6 +4,10 @@ from models.Move import Move
 class Piece:
     def __init__(self, is_white):
         self.is_white = is_white
+        self.move_count = 0
+
+    def has_moved(self):
+        return self.move_count > 0
 
     def get_color(self):
         return 'W' if self.is_white else 'B'
