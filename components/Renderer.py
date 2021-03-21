@@ -1,4 +1,6 @@
 import pygame as pg
+
+from models.BoardState import BoardState
 from models.ChessEngine import ChessEngine
 from constants import resolution, colors
 from constants.sprites import sprites
@@ -10,13 +12,15 @@ def get_rect(c, r):
 
 
 class Renderer:
-    def __init__(self, chess_engine: ChessEngine):
+    def __init__(self, chess_engine: ChessEngine, board_state: BoardState):
         self.chess_engine = chess_engine
+        self.board_state = board_state
         self.screen = pg.display.set_mode((resolution.width, resolution.height))
         self.screen.fill(pg.Color(colors.white))
 
     def render(self):
         self.render_board()
+        self.render_selected_square()
         self.render_pieces()
         pg.display.flip()
 
@@ -38,3 +42,12 @@ class Renderer:
                     continue
                 self.screen.blit(sprites[piece.get_name()], get_rect(c, r))
         pass
+
+    def render_selected_square(self):
+        if self.board_state.selected_square == ():
+            return
+        r, c = self.board_state.selected_square
+        s = pg.Surface((sq_size, sq_size))
+        s.set_alpha(100)
+        s.fill(colors.blue)
+        self.screen.blit(s, (c * sq_size, r * sq_size))
