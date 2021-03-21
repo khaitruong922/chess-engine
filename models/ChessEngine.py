@@ -22,6 +22,9 @@ class ChessEngine:
         self.moves = []
         self.is_white_turn = True
 
+    def get_piece(self, r, c):
+        return self.board[r][c]
+
     def make_move(self, move):
         self.board[move.start[0]][move.start[1]] = None
         self.board[move.end[0]][move.end[1]] = move.piece_moved

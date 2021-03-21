@@ -29,6 +29,13 @@ def main():
                 if e.key == pg.K_z:
                     board_state.undo()
                     continue
+                if e.key == pg.K_r:
+                    clock = Clock()
+                    chess_engine = ChessEngine()
+                    board_state = BoardState(chess_engine)
+                    renderer = Renderer(chess_engine, board_state)
+                    is_playing = True
+                    continue
                 continue
         board_state.handle_move_made()
         clock.tick()
