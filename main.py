@@ -5,7 +5,6 @@ from models.BoardState import BoardState
 from models.ChessEngine import ChessEngine
 from components.Renderer import Renderer
 from components.Clock import Clock
-from models.Move import Move
 
 
 def main():
