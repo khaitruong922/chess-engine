@@ -1,4 +1,3 @@
-from constants.pieces import *
 from models.pieces.Bishop import Bishop
 from models.pieces.King import King
 from models.pieces.Knight import Knight

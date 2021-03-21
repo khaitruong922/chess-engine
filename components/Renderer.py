@@ -1,6 +1,6 @@
 import pygame as pg
 from models.ChessEngine import ChessEngine
-from constants import resolution, colors, pieces
+from constants import resolution, colors
 from constants.sprites import sprites
 from constants.resolution import sq_size
 
