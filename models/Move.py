@@ -1,5 +1,5 @@
 class Move:
-    def __init__(self, start, end, board, is_enpassant_move=False, is_castle_move=False):
+    def __init__(self, start, end, board, is_enpassant_move=False):
         self.start = start
         self.end = end
         self.piece_moved = board[start[0]][start[1]]
@@ -8,7 +8,6 @@ class Move:
                 (self.piece_moved.is_white and self.end[0] == 0) or (
                 not self.piece_moved.is_white and self.end[0] == 7))
         self.is_enpassant_move = is_enpassant_move
-        self.is_castle_move = is_castle_move
 
     def __eq__(self, other):
         if not isinstance(other, Move):

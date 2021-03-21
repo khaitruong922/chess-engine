@@ -53,7 +53,6 @@ class BoardState():
         last_player = "Black" if self.chess_engine.is_white_turn else "White"
         self.valid_moves = self.chess_engine.get_valid_moves()
         self.move_made = False
-        print(self.chess_engine.get_castle_moves())
         if self.chess_engine.is_stalemated():
             print(f"{last_player} stalemate")
             return

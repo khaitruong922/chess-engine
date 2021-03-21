@@ -1,4 +1,3 @@
-from models.Move import Move
 from models.pieces.Bishop import Bishop
 from models.pieces.King import King
 from models.pieces.Knight import Knight
@@ -99,44 +98,6 @@ class ChessEngine:
                 valid_moves.append(move)
             self.undo_move()
         return valid_moves
-
-    def get_castle_moves(self):
-        moves = []
-        if self.is_checked():
-            return moves
-        if self.is_white_turn:
-            king = self.get_piece(7, 4)
-            if not isinstance(king, King) or king.has_moved():
-                return moves
-            # Queen side
-            queen_side_empty = all(self.get_piece(7, i) is None for i in range(1, 4))
-            if queen_side_empty:
-                rook = self.get_piece(7, 0)
-                if isinstance(rook, Rook) and not rook.has_moved():
-                    moves.append(Move((7, 4), (7, 2), self.board, is_castle_move=True))
-            # King side
-            king_side_empty = all(self.get_piece(7, i) is None for i in range(5, 7))
-            if king_side_empty:
-                rook = self.get_piece(7, 0)
-                if isinstance(rook, Rook) and not rook.has_moved():
-                    moves.append(Move((7, 4), (7, 6), self.board, is_castle_move=True))
-        else:
-            king = self.get_piece(0, 4)
-            if not isinstance(king, King) or king.has_moved():
-                return moves
-            # Queen side
-            queen_side_empty = all(self.get_piece(0, i) is None for i in range(1, 4))
-            if queen_side_empty:
-                rook = self.get_piece(0, 0)
-                if isinstance(rook, Rook) and not rook.has_moved():
-                    moves.append(Move((0, 4), (0, 2), self.board, is_castle_move=True))
-            # King side
-            king_side_empty = all(self.get_piece(0, i) is None for i in range(5, 7))
-            if king_side_empty:
-                rook = self.get_piece(0, 0)
-                if isinstance(rook, Rook) and not rook.has_moved():
-                    moves.append(Move((0, 4), (0, 6), self.board, is_castle_move=True))
-        return moves
 
     def switch_turn(self):
         self.is_white_turn = not self.is_white_turn
