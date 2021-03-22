@@ -21,7 +21,13 @@ class ChessEngine:
         ]
         self.moves = []
         self.is_white_turn = True
-        self.enpassant_move = None
+        self.valid_moves = []
+        self.is_checked = False
+        self.is_checkmated = False
+        self.is_stalemated = False
+        self.white_king_location = (7, 4)
+        self.black_king_location = (0, 4)
+        self.calculate_valid_moves()
 
     def get_piece(self, r, c):
         return self.board[r][c]
@@ -32,6 +38,11 @@ class ChessEngine:
         move.piece_moved.move_count += 1
         if move.is_pawn_promotion:
             self.board[move.end[0]][move.end[1]] = Queen(move.piece_moved.is_white)
+        elif isinstance(move.piece_moved, King):
+            if move.piece_moved.is_white:
+                self.white_king_location = move.end
+            else:
+                self.black_king_location = move.end
         self.moves.append(move)
         self.switch_turn()
 
@@ -42,15 +53,14 @@ class ChessEngine:
         self.board[move.start[0]][move.start[1]] = move.piece_moved
         move.piece_moved.move_count -= 1
         self.board[move.end[0]][move.end[1]] = move.piece_captured
+        if isinstance(move.piece_moved, King):
+            if move.piece_moved.is_white:
+                self.white_king_location = move.start
+            else:
+                self.black_king_location = move.start
         self.switch_turn()
 
-    def is_checking(self):
-        for move in self.get_possible_moves():
-            if isinstance(move.piece_captured, King):
-                return True
-        return False
-
-    def is_checked(self):
+    def _is_checked(self):
         self.switch_turn()
         for move in self.get_possible_moves():
             if isinstance(move.piece_captured, King):
@@ -59,23 +69,19 @@ class ChessEngine:
         self.switch_turn()
         return False
 
-    def has_no_valid_moves(self):
-        return True if len(self.get_valid_moves()) == 0 else False
+    def calculate_valid_moves(self):
+        self.valid_moves = self.get_valid_moves()
+        print(self.valid_moves)
 
-    def is_stalemated(self):
-        return not self.is_checked() and self.has_no_valid_moves()
-
-    def is_checkmated(self):
-        return self.is_checked() and self.has_no_valid_moves()
+    def calculate_player_state(self):
+        self.is_checked = self._is_checked()
+        self.is_stalemated = not self.is_checked and len(self.valid_moves) == 0
+        self.is_checkmated = self.is_checked and len(self.valid_moves) == 0
 
     def get_checked_square(self):
-        square = None
-        self.switch_turn()
-        for move in self.get_possible_moves():
-            if isinstance(move.piece_captured, King):
-                square = move.end[0], move.end[1]
-        self.switch_turn()
-        return square
+        if self.is_checked:
+            return self.white_king_location if self.is_white_turn else self.black_king_location
+        return None
 
     def get_possible_moves(self):
         moves = []
@@ -92,11 +98,14 @@ class ChessEngine:
         possible_moves = self.get_possible_moves()
         valid_moves = []
         for move in possible_moves:
-            self.make_move(move)
-            # Now it's opponent turn
-            if not self.is_checking():
+            self.make_move(move)  # Make the move so now it is opponent turn
+            # Check if you are not being checked after making the move
+            self.switch_turn()  # Back to your turn
+            self.calculate_player_state()
+            if not self.is_checked:
                 valid_moves.append(move)
-            self.undo_move()
+            self.switch_turn()  # Pass turn back to opponent
+            self.undo_move()  # Undo so it is your turn now
         return valid_moves
 
     def switch_turn(self):

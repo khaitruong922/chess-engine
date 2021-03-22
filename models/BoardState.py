@@ -8,7 +8,6 @@ class BoardState():
         self.move_made = False
         self.selected_square = None
         self.clicks = []
-        self.valid_moves = self.chess_engine.get_valid_moves()
 
     def select_square(self, r, c):
         # Handle first click
@@ -28,34 +27,40 @@ class BoardState():
                 self.clicks.pop(0)
                 return
             move = Move(self.clicks[0], self.clicks[1], self.chess_engine.board)
-            if move in self.valid_moves:
-                self.chess_engine.make_move(move)
-                self.move_made = True
+            if move in self.chess_engine.valid_moves:
+                self.make_move(move)
             self.reset_click_state()
 
     def reset_click_state(self):
         self.selected_square = None
         self.clicks = []
 
+    def make_move(self, move):
+        self.chess_engine.make_move(move)
+        self.move_made = True
+        self.chess_engine.calculate_valid_moves()
+        self.chess_engine.calculate_player_state()
+
     def undo(self):
         self.chess_engine.undo_move()
         self.move_made = True
+        self.chess_engine.calculate_valid_moves()
+        self.chess_engine.calculate_player_state()
 
     def get_selected_piece_valid_moves(self):
         moves = []
         if self.selected_square is None:
             return moves
-        return [move for move in self.valid_moves if move.start == self.selected_square]
+        return [move for move in self.chess_engine.valid_moves if move.start == self.selected_square]
 
     def handle_move_made(self):
         if not self.move_made:
             return
         last_player = "Black" if self.chess_engine.is_white_turn else "White"
-        self.valid_moves = self.chess_engine.get_valid_moves()
         self.move_made = False
-        if self.chess_engine.is_stalemated():
+        if self.chess_engine.is_stalemated:
             print(f"{last_player} stalemate")
             return
-        if self.chess_engine.is_checkmated():
+        if self.chess_engine.is_checkmated:
             print(f"{last_player} checkmate")
             return
