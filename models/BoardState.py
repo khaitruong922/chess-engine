@@ -26,9 +26,10 @@ class BoardState():
             if piece is not None and piece.is_white == self.chess_engine.is_white_turn:
                 self.clicks.pop(0)
                 return
-            move = Move(self.clicks[0], self.clicks[1], self.chess_engine.board)
-            if move in self.chess_engine.valid_moves:
-                self.make_move(move)
+
+            for move in self.chess_engine.valid_moves:
+                if move.start == self.clicks[0] and move.end == self.clicks[1]:
+                    self.make_move(move)
             self.reset_click_state()
 
     def reset_click_state(self):

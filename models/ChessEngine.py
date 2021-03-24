@@ -1,3 +1,4 @@
+from models.Move import Move
 from models.pieces.Bishop import Bishop
 from models.pieces.King import King
 from models.pieces.Knight import Knight
@@ -43,6 +44,18 @@ class ChessEngine:
                 self.white_king_location = move.end
             else:
                 self.black_king_location = move.end
+        if move.is_castle_move:
+            end = move.end
+            self.switch_turn()
+            if end == (7, 2):
+                self.make_move(Move((7, 0), (7, 3), self.board))
+            elif end == (7, 6):
+                self.make_move(Move((7, 7), (7, 5), self.board))
+            elif end == (0, 2):
+                self.make_move(Move((0, 0), (0, 3), self.board))
+            elif end == (0, 6):
+                self.make_move(Move((0, 7), (0, 5), self.board))
+
         self.moves.append(move)
         self.switch_turn()
 
