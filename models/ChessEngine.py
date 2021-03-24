@@ -26,8 +26,6 @@ class ChessEngine:
         self.is_checked = False
         self.is_checkmated = False
         self.is_stalemated = False
-        self.white_king_location = (7, 4)
-        self.black_king_location = (0, 4)
         self.calculate_valid_moves()
 
     def get_piece(self, r, c):
@@ -46,7 +44,6 @@ class ChessEngine:
                 self.black_king_location = move.end
         if move.is_castle_move:
             end = move.end
-            self.switch_turn()
             if end == (7, 2):
                 self.make_move(Move((7, 0), (7, 3), self.board))
             elif end == (7, 6):
@@ -55,6 +52,7 @@ class ChessEngine:
                 self.make_move(Move((0, 0), (0, 3), self.board))
             elif end == (0, 6):
                 self.make_move(Move((0, 7), (0, 5), self.board))
+            self.switch_turn()
 
         self.moves.append(move)
         self.switch_turn()
@@ -66,11 +64,6 @@ class ChessEngine:
         self.board[move.start[0]][move.start[1]] = move.piece_moved
         move.piece_moved.move_count -= 1
         self.board[move.end[0]][move.end[1]] = move.piece_captured
-        if isinstance(move.piece_moved, King):
-            if move.piece_moved.is_white:
-                self.white_king_location = move.start
-            else:
-                self.black_king_location = move.start
         self.switch_turn()
 
     def _is_checked(self):
