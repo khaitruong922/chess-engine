@@ -33,7 +33,7 @@ class ChessEngine:
     def get_piece(self, r, c):
         return self.board[r][c]
 
-    def make_move(self, move):
+    def make_move(self, move, should_do_castle_move=True):
         self.board[move.start[0]][move.start[1]] = None
         self.board[move.end[0]][move.end[1]] = move.piece_moved
         move.piece_moved.move_count += 1
@@ -44,22 +44,28 @@ class ChessEngine:
                 self.white_king_location = move.end
             else:
                 self.black_king_location = move.end
-        if move.is_castle_move:
+        if move.is_castle_move and should_do_castle_move:
             end = move.end
-            self.switch_turn()
             if end == (7, 2):
-                self.make_move(Move((7, 0), (7, 3), self.board))
+                rook = self.get_piece(7, 0)
+                self.board[7][3] = rook
+                self.board[7][0] = None
             elif end == (7, 6):
-                self.make_move(Move((7, 7), (7, 5), self.board))
+                rook = self.get_piece(7, 7)
+                self.board[7][5] = rook
+                self.board[7][7] = None
             elif end == (0, 2):
-                self.make_move(Move((0, 0), (0, 3), self.board))
+                rook = self.get_piece(0, 0)
+                self.board[0][3] = rook
+                self.board[0][0] = None
             elif end == (0, 6):
-                self.make_move(Move((0, 7), (0, 5), self.board))
-
+                rook = self.get_piece(0, 7)
+                self.board[0][5] = rook
+                self.board[0][7] = None
         self.moves.append(move)
         self.switch_turn()
 
-    def undo_move(self):
+    def undo_move(self, should_do_castle_move=True):
         if len(self.moves) == 0:
             return
         move = self.moves.pop()
@@ -71,6 +77,24 @@ class ChessEngine:
                 self.white_king_location = move.start
             else:
                 self.black_king_location = move.start
+        if move.is_castle_move and should_do_castle_move:
+            end = move.end
+            if end == (7, 2):
+                rook = self.get_piece(7, 3)
+                self.board[7][0] = rook
+                self.board[7][3] = None
+            elif end == (7, 6):
+                rook = self.get_piece(7, 5)
+                self.board[7][7] = rook
+                self.board[7][5] = None
+            elif end == (0, 2):
+                rook = self.get_piece(0, 3)
+                self.board[0][0] = rook
+                self.board[0][3] = None
+            elif end == (0, 6):
+                rook = self.get_piece(0, 5)
+                self.board[0][7] = rook
+                self.board[0][5] = None
         self.switch_turn()
 
     def _is_checked(self):
@@ -111,14 +135,16 @@ class ChessEngine:
         possible_moves = self.get_possible_moves()
         valid_moves = []
         for move in possible_moves:
-            self.make_move(move)  # Make the move so now it is opponent turn
+            if move.is_castle_move and self.is_checked:
+                continue
+            self.make_move(move, should_do_castle_move=False)  # Make the move so now it is opponent turn
             # Check if you are not being checked after making the move
             self.switch_turn()  # Back to your turn
             self.calculate_player_state()
             if not self.is_checked:
                 valid_moves.append(move)
             self.switch_turn()  # Pass turn back to opponent
-            self.undo_move()  # Undo so it is your turn now
+            self.undo_move(should_do_castle_move=False)  # Undo so it is your turn now
         return valid_moves
 
     def switch_turn(self):
